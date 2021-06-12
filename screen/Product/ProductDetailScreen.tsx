@@ -39,10 +39,12 @@ const styles = StyleSheet.create({
     textAlign: "center",
 
     marginVertical: 20,
+    fontFamily: "Open-sans-Regular",
   },
   description: {
     fontSize: 14,
     textAlign: "center",
+    fontFamily: "Open-sans-Regular",
   },
   action: {
     marginVertical: 10,
