@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import ProductItem from "../../components/shop/ProductItem";
 import rootReducer from "./../../reducers/product";
 
-const ProductOverviewScreen: React.FC = () => {
+const ProductOverviewScreen = (props: any) => {
   const products = useSelector(
     (state: any) => state?.products?.availableProduct
   );
@@ -19,7 +19,12 @@ const ProductOverviewScreen: React.FC = () => {
             image={itemData.item.imageUrl}
             title={itemData.item.title}
             price={itemData.item.price}
-            onViewDetail={() => console.log("yo")}
+            onViewDetail={() =>
+              props.navigation.navigate("ProductDetail", {
+                productId: itemData.item.id,
+              })
+            }
+            onAddCart={() => console.log("ADD cART")}
           />
         );
       }}
