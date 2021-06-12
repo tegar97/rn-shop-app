@@ -1,6 +1,6 @@
 import PRODUCTS from "../data/dummy-data ";
 
-const initialState = {
+export const initialState = {
   availableProduct: PRODUCTS,
   userProduct: PRODUCTS.filter((prod) => prod.ownerId == "u1"),
 };
