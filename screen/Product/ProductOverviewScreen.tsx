@@ -22,7 +22,7 @@ const ProductOverviewScreen = (props: any) => {
             onViewDetail={() =>
               props.navigation.navigate("ProductDetail", {
                 productId: itemData.item.id,
-                ProductTitle: itemData.item.title,
+                productTitle: itemData.item.title,
               })
             }
             onAddCart={() => console.log("ADD cART")}
