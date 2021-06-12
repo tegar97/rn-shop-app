@@ -1,28 +1,51 @@
 import React from "react";
-import { View, Text, Image, Button, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  Button,
+  StyleSheet,
+  TouchableOpacity,
+  Platform,
+  TouchableNativeFeedback,
+} from "react-native";
+import {} from "react-native-gesture-handler";
 import colors from "../../constant/colors";
 
 const ProductItem = (props: any) => {
+  let TouchableCmp: any = TouchableOpacity;
+
+  if (Platform.OS === "android" && Platform.Version >= 21) {
+    TouchableCmp = TouchableNativeFeedback;
+  }
   return (
     <View style={styles.product}>
-      <View style={styles.imageContainer}>
-        <Image style={styles.Image} source={{ uri: props.image }} />
-      </View>
-      <View style={styles.details}>
-        <Text style={styles.title}>{props.title}</Text>
-        <Text style={styles.price}>${props.price.toFixed(2)}</Text>
-      </View>
-      <View style={styles.actions}>
-        <Button
-          color={colors.primary}
-          title="View Details"
-          onPress={props.onViewDetail}
-        />
-        <Button
-          color={colors.primary}
-          title="To Cart"
-          onPress={props.onAddToCart}
-        />
+      <View style={styles.touchable}>
+        <TouchableCmp onPress={props.onViewDetail}>
+          <View>
+            <View style={styles.imageContainer}>
+              <Image style={styles.Image} source={{ uri: props.image }} />
+            </View>
+            <View style={styles.details}>
+              <Text style={styles.title}>{props.title}</Text>
+              <Text style={styles.price}>${props.price.toFixed(2)}</Text>
+            </View>
+            <TouchableOpacity>
+              <View style={styles.actions}>
+                <Button
+                  color={colors.primary}
+                  title="View Details"
+                  onPress={props.onViewDetail}
+                />
+                <Button
+                  color={colors.primary}
+                  title="To Cart"
+                  onPress={props.onAddToCart}
+                />
+              </View>
+            </TouchableOpacity>
+          </View>
+        </TouchableCmp>
       </View>
     </View>
   );
@@ -35,10 +58,14 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 8,
     elevation: 5,
-    borderRadius: 10,
     backgroundColor: "#ffff",
     height: 300,
     margin: 20,
+    borderRadius: 10,
+  },
+  touchable: {
+    overflow: "hidden",
+    borderRadius: 10,
   },
   Image: {
     width: "100%",
