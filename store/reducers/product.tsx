@@ -1,4 +1,4 @@
-import PRODUCTS from "../data/dummy-data ";
+import PRODUCTS from "../../data/dummy-data ";
 
 export const initialState = {
   availableProduct: PRODUCTS,

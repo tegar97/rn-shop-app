@@ -4,16 +4,17 @@ import { StyleSheet, Text, View } from "react-native";
 import { createStore, combineReducers } from "redux";
 import { Provider } from "react-redux";
 
-import productReducer from "./reducers/product";
+import productReducer from "./store/reducers/product";
 import ShopNavigation from "./navigation/ShopNavigation";
 import * as Font from "expo-font";
 import AppLoading from "expo-app-loading";
+import { composeWithDevTools } from "redux-devtools-extension";
 
 const rootReducer = combineReducers({
   products: productReducer,
 });
 
-const store = createStore(rootReducer);
+const store = createStore(rootReducer, composeWithDevTools());
 
 let customFonts = {
   "Open-sans-Bold": require("./assets/fonts/OpenSans-Bold.ttf"),
