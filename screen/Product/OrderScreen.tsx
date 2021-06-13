@@ -3,8 +3,7 @@ import { View, Text } from "react-native";
 const OrderScreen: React.FC = () => {
   return (
     <View>
-      {" "}
-      <Text>Cart Screen</Text>
+      <Text>Order Screen</Text>
     </View>
   );
 };
