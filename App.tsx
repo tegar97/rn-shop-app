@@ -9,9 +9,11 @@ import ShopNavigation from "./navigation/ShopNavigation";
 import * as Font from "expo-font";
 import AppLoading from "expo-app-loading";
 import { composeWithDevTools } from "redux-devtools-extension";
+import cartReducer from "./store/reducers/cart";
 
 const rootReducer = combineReducers({
   products: productReducer,
+  cart: cartReducer,
 });
 
 const store = createStore(rootReducer, composeWithDevTools());
