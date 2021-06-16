@@ -39,9 +39,13 @@ const ProductOverviewScreen = (props: any) => {
 ProductOverviewScreen.navigationOptions = () => {
   return {
     headerTitle: "All Product",
-    headerLeft: (
+    headerRight: () => (
       <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
-        <Item title="Cart" iconName="ios-menu" onPress={() => {}} />
+        <Item
+          title="Cart"
+          iconName={Platform.OS === "android" ? "md-cart" : "ios-cart"}
+          onPress={() => {}}
+        />
       </HeaderButtons>
     ),
   };
