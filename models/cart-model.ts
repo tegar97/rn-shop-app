@@ -3,9 +3,9 @@ class CartItem {
     quantity : number ;
     productPrice : string;
     productTitle : string;
-    sum : string;
+    sum : number;
    
-    constructor(quantity :number ,productPrice :string,productTitle : string,sum : string) {
+    constructor(quantity :number ,productPrice :string,productTitle : string,sum : number) {
         this.quantity = quantity
         this.productPrice = productPrice
         this.productTitle = productTitle
