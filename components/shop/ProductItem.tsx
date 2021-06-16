@@ -40,7 +40,7 @@ const ProductItem = (props: any) => {
                 <Button
                   color={colors.primary}
                   title="To Cart"
-                  onPress={props.onAddToCart}
+                  onPress={props.onAddCart}
                 />
               </View>
             </TouchableOpacity>

@@ -36,7 +36,7 @@ const ProductOverviewScreen = (props: any) => {
   );
 };
 
-ProductOverviewScreen.navigationOptions = () => {
+ProductOverviewScreen.navigationOptions = (navData: any) => {
   return {
     headerTitle: "All Product",
     headerRight: () => (
@@ -44,7 +44,9 @@ ProductOverviewScreen.navigationOptions = () => {
         <Item
           title="Cart"
           iconName={Platform.OS === "android" ? "md-cart" : "ios-cart"}
-          onPress={() => {}}
+          onPress={() => {
+            navData.navigation.navigate("CartScreen");
+          }}
         />
       </HeaderButtons>
     ),
