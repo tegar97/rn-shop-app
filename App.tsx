@@ -10,10 +10,11 @@ import * as Font from "expo-font";
 import AppLoading from "expo-app-loading";
 import { composeWithDevTools } from "redux-devtools-extension";
 import cartReducer from "./store/reducers/cart";
-
+import OrderReducer from "./store/reducers/Orders";
 const rootReducer = combineReducers({
   products: productReducer,
   cart: cartReducer,
+  Order: OrderReducer,
 });
 
 const store = createStore(rootReducer, composeWithDevTools());

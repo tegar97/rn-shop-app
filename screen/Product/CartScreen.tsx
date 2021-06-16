@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import CartItem from "../../components/shop/CartItem";
 import colors from "../../constant/colors";
 import { removeFromCart } from "../../store/actions/Cart";
+import { addOrder } from "../../store/actions/Orders";
 
 const CartScreen: React.FC = () => {
   const cartTotalAmout = useSelector((state: any) => state.cart.totalAmount);
@@ -36,7 +37,7 @@ const CartScreen: React.FC = () => {
         <Button
           title="Order Now"
           color={colors.primary}
-          onPress={() => console.log("Ping Pong")}
+          onPress={() => dispatch(addOrder(cartItems, cartTotalAmout))}
           disabled={cartItems.length === 0}
         />
       </View>
