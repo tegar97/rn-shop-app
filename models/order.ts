@@ -1,13 +1,29 @@
+import moment from 'moment'
+
+
 class Order {
     id : number | string
     items : any
     totalAmount : number
-    date : string
-    constructor(id :  number | string ,items :any ,totalAmount : number,date : string) {
+    date : any
+    constructor(id :  number | string ,items :any ,totalAmount : number,date : any) {
         this.id = id;
         this.items = items;
         this.totalAmount  = totalAmount;
         this.date = date;
+    }
+
+    get readableDate() {
+        // return this.date.toLocaleDateString('en-EN',{
+        //     year: 'numeric',
+        //     month: 'long',
+        //     day: 'numeric',
+        //     hour: '2-digit',
+        //     minute: '2-digit'
+
+        // })
+
+        return moment(this.date).format('MMMM Do YYYY,hh:mm')
     }
 }
 

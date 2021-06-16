@@ -3,6 +3,8 @@ import { FlatList, Text, Platform } from "react-native";
 import { useSelector } from "react-redux";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import CustomHeaderButton from "../../UI/HeaderButtons";
+import OrderItem from "../../components/shop/OrderItem";
+
 const OrderScreen = () => {
   const orders = useSelector((state: any) => state.orders.orders);
 
@@ -10,7 +12,12 @@ const OrderScreen = () => {
     <FlatList
       data={orders}
       keyExtractor={(item) => item.id}
-      renderItem={(itemData) => <Text>{itemData.item.totalAmount}</Text>}
+      renderItem={(itemData) => (
+        <OrderItem
+          amount={itemData.item.totalAmount}
+          date={itemData.item.readableDate}
+        />
+      )}
     />
   );
 };

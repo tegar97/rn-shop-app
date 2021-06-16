@@ -44,12 +44,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   quantity: {
-    fontFamily: "open-sans-Bold",
+    fontFamily: "Open-sans-Bold",
     color: "#888",
     fontSize: 16,
   },
   mainText: {
-    fontFamily: "open-sans-Bold",
+    fontFamily: "Open-sans-Bold",
     fontSize: 16,
   },
   deleteButton: {
