@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import CustomHeaderButton from "../../UI/HeaderButtons";
 import {
@@ -23,6 +23,14 @@ const EditProduct = (props: any) => {
   const [description, setDescription] = useState(
     editedProduct ? editedProduct.description : ""
   );
+
+  const submitHandler = useCallback(() => {
+    console.log("Submiting");
+  }, []);
+
+  useEffect(() => {
+    props.navigation.setParams({ submit: submitHandler });
+  }, [submitHandler]);
 
   return (
     <ScrollView>
@@ -66,6 +74,7 @@ const EditProduct = (props: any) => {
   );
 };
 EditProduct.navigationOptions = (navData: any) => {
+  const submitFn = navData.navigation.getParam("submit");
   return {
     headerTitle: navData.navigation.getParam("productId")
       ? "Edit Product"
@@ -77,7 +86,7 @@ EditProduct.navigationOptions = (navData: any) => {
           iconName={
             Platform.OS === "android" ? "md-checkmark" : "ios-checkmark"
           }
-          onPress={() => {}}
+          onPress={submitFn}
         />
       </HeaderButtons>
     ),
