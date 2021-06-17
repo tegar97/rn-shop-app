@@ -1,10 +1,18 @@
 import React from "react";
-import { FlatList, Platform } from "react-native";
+import { FlatList, Platform, Button } from "react-native";
 import { useSelector } from "react-redux";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import CustomHeaderButton from "../../UI/HeaderButtons";
 import ProductItem from "../../components/shop/ProductItem";
-const UserProductScreen = () => {
+import colors from "../../constant/colors";
+const UserProductScreen = (props: any) => {
+  const selectItemHandler = (id: any, title: any) => {
+    props.navigation.navigate("ProductDetail", {
+      productId: id,
+      productTitle: title,
+    });
+  };
+
   const usersProducts = useSelector((state: any) => state.products.userProduct);
   return (
     <FlatList
@@ -15,9 +23,11 @@ const UserProductScreen = () => {
           image={itemData.item.imageUrl}
           title={itemData.item.title}
           price={itemData.item.price}
-          onViewDetail={() => {}}
-          onAddCart={() => {}}
-        />
+          onSelect={() => {}}
+        >
+          <Button color={colors.primary} title="Edit" onPress={() => {}} />
+          <Button color={colors.primary} title="Delete" onPress={() => {}} />
+        </ProductItem>
       )}
     />
   );
