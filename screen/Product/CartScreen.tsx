@@ -31,7 +31,10 @@ const CartScreen: React.FC = () => {
         <Text style={styles.summaryText}>
           Total :{" "}
           <Text style={styles.amount}>
-            ${cartTotalAmout == null ? "" : cartTotalAmout.toFixed(2)}
+            $
+            {cartTotalAmout == null
+              ? ""
+              : Math.round(cartTotalAmout.toFixed(2))}
           </Text>
         </Text>
         <Button
@@ -49,6 +52,7 @@ const CartScreen: React.FC = () => {
             quantity={itemData.item.quantity}
             title={itemData.item.productTitle}
             amount={itemData.item.sum}
+            deleteable
             onRemove={() => {
               dispatch(removeFromCart(itemData.item.productId));
             }}
