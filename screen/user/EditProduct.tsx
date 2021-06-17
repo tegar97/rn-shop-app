@@ -9,8 +9,11 @@ import {
   TextInput,
   Platform,
 } from "react-native";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { createProduct, updateProduct } from "../../store/actions/Product";
 const EditProduct = (props: any) => {
+  const dispatch = useDispatch();
+
   const prodId = props.navigation.getParam("productId");
   const editedProduct = useSelector((state: any) =>
     state.products.userProduct.find((prod: any) => prod.id === prodId)
@@ -25,8 +28,12 @@ const EditProduct = (props: any) => {
   );
 
   const submitHandler = useCallback(() => {
-    console.log("Submiting");
-  }, []);
+    if (editedProduct) {
+      dispatch(updateProduct(prodId, title, description, imageUrl));
+    } else {
+      dispatch(createProduct(title, description, imageUrl, +price));
+    }
+  }, [dispatch, prodId, title, description, imageUrl]);
 
   useEffect(() => {
     props.navigation.setParams({ submit: submitHandler });
