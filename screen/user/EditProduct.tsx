@@ -49,6 +49,12 @@ const EditProduct = (props: any) => {
             style={styles.input}
             value={title}
             onChangeText={(text) => setTitle(text)}
+            keyboardType="default"
+            autoCapitalize="sentences"
+            autoCorrect
+            returnKeyType="next"
+            onEndEditing={() => console.log("onEditing")}
+            onSubmitEditing={() => console.log("onSubmitEditing")}
           />
         </View>
         <View style={styles.formControl}>
