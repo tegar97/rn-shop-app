@@ -53,8 +53,7 @@ const EditProduct = (props: any) => {
             autoCapitalize="sentences"
             autoCorrect
             returnKeyType="next"
-            onEndEditing={() => console.log("onEditing")}
-            onSubmitEditing={() => console.log("onSubmitEditing")}
+
           />
         </View>
         <View style={styles.formControl}>
