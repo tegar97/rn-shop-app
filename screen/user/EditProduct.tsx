@@ -12,28 +12,26 @@ import {
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { createProduct, updateProduct } from "../../store/actions/Product";
-
+import Input from "./../../UI/Input";
 const FORM_INPUT_UPDATE = "FORM_INPUT_UPDATE";
-const formReducer: any = (state: any, action: any) => {
+const formReducer = (state: any, action: any) => {
   if (action.type === FORM_INPUT_UPDATE) {
-    const updateValues = {
+    const updatedValues = {
       ...state.inputValues,
       [action.input]: action.value,
     };
-    const updateValidities = {
+    const updatedValidities = {
       ...state.inputValidities,
       [action.input]: action.isValid,
     };
-
-    let UpdateFormIsValid = true;
-    for (const key in updateValidities) {
-      UpdateFormIsValid = UpdateFormIsValid && updateValidities[key];
+    let updatedFormIsValid = true;
+    for (const key in updatedValidities) {
+      updatedFormIsValid = updatedFormIsValid && updatedValidities[key];
     }
-
     return {
-      formIsValid: UpdateFormIsValid,
-      inputValidities: updateValidities,
-      inputValues: updateValues,
+      formIsValid: updatedFormIsValid,
+      inputValidities: updatedValidities,
+      inputValues: updatedValues,
     };
   }
   return state;
@@ -46,7 +44,7 @@ const EditProduct = (props: any) => {
     state.products.userProduct.find((prod: any) => prod.id === prodId)
   );
 
-  const [FormState, dispatchFormState]: any = useReducer(formReducer, {
+  const [FormState, dispatchFormState] = useReducer(formReducer, {
     inputValues: {
       title: editedProduct ? editedProduct.title : "",
       imageUrl: editedProduct ? editedProduct.imageUrl : "",
@@ -61,14 +59,6 @@ const EditProduct = (props: any) => {
     },
     formIsValid: editedProduct ? true : false,
   });
-  const [title, setTitle] = useState(editedProduct ? editedProduct.title : "");
-  const [imageUrl, setimageUrl] = useState(
-    editedProduct ? editedProduct.imageUrl : ""
-  );
-  const [price, setPrice] = useState("");
-  const [description, setDescription] = useState(
-    editedProduct ? editedProduct.description : ""
-  );
 
   const submitHandler = useCallback(() => {
     if (!FormState.formIsValid) {
@@ -98,18 +88,17 @@ const EditProduct = (props: any) => {
     props.navigation.goBack();
   }, [dispatch, prodId, FormState]);
 
-  const textChangeHandler = (inputIdentifier: any, text: any) => {
-    let isValid = false;
-    if (text.trim().length > 0) {
-      isValid = true;
-    }
-    dispatchFormState({
-      type: FORM_INPUT_UPDATE,
-      value: text,
-      isValid: isValid,
-      input: inputIdentifier,
-    });
-  };
+  const inputChangeHandler = useCallback(
+    (inputIdentifier: any, inputValue: any, inputValidity: any) => {
+      dispatchFormState({
+        type: FORM_INPUT_UPDATE,
+        value: inputValue,
+        isValid: inputValidity,
+        input: inputIdentifier,
+      });
+    },
+    [dispatchFormState]
+  );
 
   useEffect(() => {
     props.navigation.setParams({ submit: submitHandler });
@@ -118,47 +107,56 @@ const EditProduct = (props: any) => {
   return (
     <ScrollView>
       <View style={styles.form}>
-        <View style={styles.formControl}>
-          <Text style={styles.label}>Title</Text>
-          <TextInput
-            style={styles.input}
-            value={FormState.inputValues.title}
-            onChangeText={textChangeHandler.bind(this, "title")}
-            keyboardType="default"
-            autoCapitalize="sentences"
-            autoCorrect
-            returnKeyType="next"
-          />
-          {!FormState.inputValidities.title && (
-            <Text>Please enter a valid title</Text>
-          )}
-        </View>
-        <View style={styles.formControl}>
-          <Text style={styles.label}>Image Url</Text>
-          <TextInput
-            style={styles.input}
-            value={FormState.inputValues.imageUrl}
-            onChangeText={textChangeHandler.bind(this, "imageUrl")}
-          />
-        </View>
+        <Input
+          id="title"
+          label="Title"
+          errorText="Please enter a valid title!"
+          keyboardType="default"
+          autoCapitalize="sentences"
+          autoCorrect
+          returnKeyType="next"
+          onInputChange={inputChangeHandler}
+          initialValue={editedProduct ? editedProduct.title : ""}
+          initiallyValid={!!editedProduct}
+          required
+        />
+        <Input
+          id="imageUrl"
+          label="Image Url"
+          errorText="Please Enter a valid image url!"
+          keyboardType="default"
+          returnKeyType="next"
+          onInputChange={inputChangeHandler}
+          initialValue={editedProduct ? editedProduct.imageUrl : ""}
+          initialValid={!!editedProduct}
+          required
+        />
+
         {editedProduct ? null : (
-          <View style={styles.formControl}>
-            <Text style={styles.label}>Price</Text>
-            <TextInput
-              style={styles.input}
-              value={FormState.inputValues.price}
-              onChangeText={textChangeHandler.bind(this, "price")}
-            />
-          </View>
-        )}
-        <View style={styles.formControl}>
-          <Text style={styles.label}>Description</Text>
-          <TextInput
-            style={styles.input}
-            value={FormState.inputValues.description}
-            onChangeText={textChangeHandler.bind(this, "description")}
+          <Input
+            id="price"
+            label="Price"
+            errorText="Please Enter a valid Price!"
+            keyboardType="decimal-pad"
+            returnKeyType="next"
+            required
+            onInputChange={inputChangeHandler}
+            min={0.1}
           />
-        </View>
+        )}
+        <Input
+          id="description"
+          label="Description"
+          errorText="Please Enter a valid description!"
+          keyboardType="default"
+          returnKeyType="next"
+          multiline
+          numberOfLines={3}
+          onInputChange={inputChangeHandler}
+          initialValue={editedProduct ? editedProduct.description : ""}
+          initialValid={!!editedProduct}
+          required
+        />
       </View>
     </ScrollView>
   );
