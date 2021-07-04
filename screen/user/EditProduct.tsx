@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, useReducer } from "react";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import CustomHeaderButton from "../../UI/HeaderButtons";
 import {
@@ -8,9 +8,36 @@ import {
   ScrollView,
   TextInput,
   Platform,
+  Alert,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { createProduct, updateProduct } from "../../store/actions/Product";
+
+const FORM_INPUT_UPDATE = "FORM_INPUT_UPDATE";
+const formReducer: any = (state: any, action: any) => {
+  if (action.type === FORM_INPUT_UPDATE) {
+    const updateValues = {
+      ...state.inputValues,
+      [action.input]: action.value,
+    };
+    const updateValidities = {
+      ...state.inputValidities,
+      [action.input]: action.isValid,
+    };
+
+    let UpdateFormIsValid = true;
+    for (const key in updateValidities) {
+      UpdateFormIsValid = UpdateFormIsValid && updateValidities[key];
+    }
+
+    return {
+      formIsValid: UpdateFormIsValid,
+      inputValidities: updateValidities,
+      inputValues: updateValues,
+    };
+  }
+  return state;
+};
 const EditProduct = (props: any) => {
   const dispatch = useDispatch();
 
@@ -18,6 +45,22 @@ const EditProduct = (props: any) => {
   const editedProduct = useSelector((state: any) =>
     state.products.userProduct.find((prod: any) => prod.id === prodId)
   );
+
+  const [FormState, dispatchFormState]: any = useReducer(formReducer, {
+    inputValues: {
+      title: editedProduct ? editedProduct.title : "",
+      imageUrl: editedProduct ? editedProduct.imageUrl : "",
+      description: editedProduct ? editedProduct.description : "",
+      price: "",
+    },
+    inputValidities: {
+      title: editedProduct ? true : false,
+      imageUrl: editedProduct ? true : false,
+      description: editedProduct ? true : false,
+      price: editedProduct ? true : false,
+    },
+    formIsValid: editedProduct ? true : false,
+  });
   const [title, setTitle] = useState(editedProduct ? editedProduct.title : "");
   const [imageUrl, setimageUrl] = useState(
     editedProduct ? editedProduct.imageUrl : ""
@@ -28,13 +71,45 @@ const EditProduct = (props: any) => {
   );
 
   const submitHandler = useCallback(() => {
+    if (!FormState.formIsValid) {
+      Alert.alert("Wrong Input!", "Please check the errors in the form", [
+        { text: "OKAY" },
+      ]);
+    }
     if (editedProduct) {
-      dispatch(updateProduct(prodId, title, description, imageUrl));
+      dispatch(
+        updateProduct(
+          prodId,
+          FormState.inputValues.title,
+          FormState.inputValues.description,
+          FormState.inputValues.imageUrl
+        )
+      );
     } else {
-      dispatch(createProduct(title, description, imageUrl, +price));
+      dispatch(
+        createProduct(
+          FormState.inputValues.title,
+          FormState.inputValues.description,
+          FormState.inputValues.imageUrl,
+          +FormState.inputValues.price
+        )
+      );
     }
     props.navigation.goBack();
-  }, [dispatch, prodId, title, description, imageUrl]);
+  }, [dispatch, prodId, FormState]);
+
+  const textChangeHandler = (inputIdentifier: any, text: any) => {
+    let isValid = false;
+    if (text.trim().length > 0) {
+      isValid = true;
+    }
+    dispatchFormState({
+      type: FORM_INPUT_UPDATE,
+      value: text,
+      isValid: isValid,
+      input: inputIdentifier,
+    });
+  };
 
   useEffect(() => {
     props.navigation.setParams({ submit: submitHandler });
@@ -47,21 +122,23 @@ const EditProduct = (props: any) => {
           <Text style={styles.label}>Title</Text>
           <TextInput
             style={styles.input}
-            value={title}
-            onChangeText={(text) => setTitle(text)}
+            value={FormState.inputValues.title}
+            onChangeText={textChangeHandler.bind(this, "title")}
             keyboardType="default"
             autoCapitalize="sentences"
             autoCorrect
             returnKeyType="next"
-
           />
+          {!FormState.inputValidities.title && (
+            <Text>Please enter a valid title</Text>
+          )}
         </View>
         <View style={styles.formControl}>
           <Text style={styles.label}>Image Url</Text>
           <TextInput
             style={styles.input}
-            value={imageUrl}
-            onChangeText={(text) => setimageUrl(text)}
+            value={FormState.inputValues.imageUrl}
+            onChangeText={textChangeHandler.bind(this, "imageUrl")}
           />
         </View>
         {editedProduct ? null : (
@@ -69,8 +146,8 @@ const EditProduct = (props: any) => {
             <Text style={styles.label}>Price</Text>
             <TextInput
               style={styles.input}
-              value={price}
-              onChangeText={(text) => setPrice(text)}
+              value={FormState.inputValues.price}
+              onChangeText={textChangeHandler.bind(this, "price")}
             />
           </View>
         )}
@@ -78,8 +155,8 @@ const EditProduct = (props: any) => {
           <Text style={styles.label}>Description</Text>
           <TextInput
             style={styles.input}
-            value={description}
-            onChangeText={(text) => setDescription(text)}
+            value={FormState.inputValues.description}
+            onChangeText={textChangeHandler.bind(this, "description")}
           />
         </View>
       </View>
