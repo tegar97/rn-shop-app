@@ -15,7 +15,7 @@ export default (state = initialState, action: any) => {
   switch (action.type) {
     case SET_PRODUCT:
       return {
-        availableProductIndex: action.products,
+        availableProduct: action.products,
         userProduct: action.products.filter(
           (prod: any) => prod.ownerId === "u1"
         ),

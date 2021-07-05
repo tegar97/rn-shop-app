@@ -11,15 +11,23 @@ export const deleteProduct = (productId:any) => {
 
 export const fetchProducts = () => {
     return async (dispatch :any) => {
-        const response = await fetch('https://rn-shop-app-3e7b5-default-rtdb.asia-southeast1.firebasedatabase.app/products.json');
-        const resData = await response.json();
 
-        const loadedProducts = [];
-
-        for(const key in resData) {
-            loadedProducts.push(new Product(key,'u1',resData[key].title,resData[key].imageUrl,resData[key].description,resData[key].price ))
+        try {
+            const response = await fetch('https://rn-shop-app-3e7b5-default-rtdb.asia-southeast1.firebasedatabase.app/products.json');
+            if(!response.ok){
+                throw new Error('Something is wrong')
+            }
+            const resData = await response.json()
+            const loadedProducts = [];
+    
+            for(const key in resData) {
+                loadedProducts.push(new Product(key,'u1',resData[key].title,resData[key].imageUrl,resData[key].description,resData[key].price ))
+            }
+            dispatch({type:SET_PRODUCT,products: loadedProducts })
+        } catch (error) {
+            throw error;
         }
-        dispatch({type:SET_PRODUCT,products: loadedProducts })
+       
     }
 }
 export const createProduct = (title: string,description : string,imageUrl : string,price : number) => {
