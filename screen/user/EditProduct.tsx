@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { createProduct, updateProduct } from "../../store/actions/Product";
 import Input from "./../../UI/Input";
 const FORM_INPUT_UPDATE = "FORM_INPUT_UPDATE";
+
 const formReducer = (state: any, action: any) => {
   if (action.type === FORM_INPUT_UPDATE) {
     const updatedValues = {
@@ -60,11 +61,11 @@ const EditProduct = (props: any) => {
   });
 
   const submitHandler = useCallback(() => {
-    if (!FormState.formIsValid) {
-      Alert.alert("Wrong Input!", "Please check the errors in the form", [
-        { text: "OKAY" },
-      ]);
-    }
+    // if (!FormState.formIsValid) {
+    //   Alert.alert("Wrong Input!", "Please check the errors in the form", [
+    //     { text: "OKAY" },
+    //   ]);
+    // }
     if (editedProduct) {
       dispatch(
         updateProduct(
@@ -155,7 +156,6 @@ const EditProduct = (props: any) => {
             keyboardType="default"
             returnKeyType="next"
             multiline
-            numberOfLines={3}
             onInputChange={inputChangeHandler}
             initialValue={editedProduct ? editedProduct.description : ""}
             initialValid={!!editedProduct}

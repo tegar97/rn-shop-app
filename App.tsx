@@ -1,9 +1,9 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { createStore, combineReducers } from "redux";
+import { createStore, combineReducers, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
-
+import ReduxThunk from "redux-thunk";
 import productReducer from "./store/reducers/product";
 import ShopNavigation from "./navigation/ShopNavigation";
 import * as Font from "expo-font";
@@ -17,7 +17,7 @@ const rootReducer = combineReducers({
   orders: OrderReducer,
 });
 
-const store = createStore(rootReducer, composeWithDevTools());
+const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
 
 let customFonts = {
   "Open-sans-Bold": require("./assets/fonts/OpenSans-Bold.ttf"),
