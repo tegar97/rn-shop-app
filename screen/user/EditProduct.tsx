@@ -3,12 +3,11 @@ import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import CustomHeaderButton from "../../UI/HeaderButtons";
 import {
   View,
-  Text,
   StyleSheet,
   ScrollView,
-  TextInput,
   Platform,
   Alert,
+  KeyboardAvoidingView,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { createProduct, updateProduct } from "../../store/actions/Product";
@@ -105,60 +104,66 @@ const EditProduct = (props: any) => {
   }, [submitHandler]);
 
   return (
-    <ScrollView>
-      <View style={styles.form}>
-        <Input
-          id="title"
-          label="Title"
-          errorText="Please enter a valid title!"
-          keyboardType="default"
-          autoCapitalize="sentences"
-          autoCorrect
-          returnKeyType="next"
-          onInputChange={inputChangeHandler}
-          initialValue={editedProduct ? editedProduct.title : ""}
-          initiallyValid={!!editedProduct}
-          required
-        />
-        <Input
-          id="imageUrl"
-          label="Image Url"
-          errorText="Please Enter a valid image url!"
-          keyboardType="default"
-          returnKeyType="next"
-          onInputChange={inputChangeHandler}
-          initialValue={editedProduct ? editedProduct.imageUrl : ""}
-          initialValid={!!editedProduct}
-          required
-        />
-
-        {editedProduct ? null : (
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : null}
+      keyboardVerticalOffset={Platform.select({ ios: 0, android: 500 })}
+    >
+      <ScrollView>
+        <View style={styles.form}>
           <Input
-            id="price"
-            label="Price"
-            errorText="Please Enter a valid Price!"
-            keyboardType="decimal-pad"
+            id="title"
+            label="Title"
+            errorText="Please enter a valid title!"
+            keyboardType="default"
+            autoCapitalize="sentences"
+            autoCorrect
             returnKeyType="next"
-            required
             onInputChange={inputChangeHandler}
-            min={0.1}
+            initialValue={editedProduct ? editedProduct.title : ""}
+            initiallyValid={!!editedProduct}
+            required
           />
-        )}
-        <Input
-          id="description"
-          label="Description"
-          errorText="Please Enter a valid description!"
-          keyboardType="default"
-          returnKeyType="next"
-          multiline
-          numberOfLines={3}
-          onInputChange={inputChangeHandler}
-          initialValue={editedProduct ? editedProduct.description : ""}
-          initialValid={!!editedProduct}
-          required
-        />
-      </View>
-    </ScrollView>
+          <Input
+            id="imageUrl"
+            label="Image Url"
+            errorText="Please Enter a valid image url!"
+            keyboardType="default"
+            returnKeyType="next"
+            onInputChange={inputChangeHandler}
+            initialValue={editedProduct ? editedProduct.imageUrl : ""}
+            initialValid={!!editedProduct}
+            required
+          />
+
+          {editedProduct ? null : (
+            <Input
+              id="price"
+              label="Price"
+              errorText="Please Enter a valid Price!"
+              keyboardType="decimal-pad"
+              returnKeyType="next"
+              required
+              onInputChange={inputChangeHandler}
+              min={0.1}
+            />
+          )}
+          <Input
+            id="description"
+            label="Description"
+            errorText="Please Enter a valid description!"
+            keyboardType="default"
+            returnKeyType="next"
+            multiline
+            numberOfLines={3}
+            onInputChange={inputChangeHandler}
+            initialValue={editedProduct ? editedProduct.description : ""}
+            initialValid={!!editedProduct}
+            required
+          />
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 EditProduct.navigationOptions = (navData: any) => {
