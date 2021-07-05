@@ -5,7 +5,17 @@ export const CREATE_PRODUCT = 'CREATE_PRODUCT'
 export const UPDATE_PRODUCT = 'UPDATE_PRODUCT'
 export const SET_PRODUCT = 'SET_PRODUCT'
 export const deleteProduct = (productId:any) => {
-    return {type: DELETE_PRODUCT,pid : productId}
+
+    return async (dispatch : any) => {
+        await fetch(`https://rn-shop-app-3e7b5-default-rtdb.asia-southeast1.firebasedatabase.app/products/${productId}.json`,{
+         method : 'DELETE',
+        
+     })
+         dispatch({
+            type: DELETE_PRODUCT,pid : productId
+         })
+     }
+    
 };
 
 
@@ -62,15 +72,31 @@ export const createProduct = (title: string,description : string,imageUrl : stri
     }
 }
 export const updateProduct = (id : string,title: string,description : string,imageUrl : string) => {
-    return {
-        type : UPDATE_PRODUCT,
-        pid : id,
-        productData : {
+    
+    
+    return async (dispatch : any) => {
+       await fetch(`https://rn-shop-app-3e7b5-default-rtdb.asia-southeast1.firebasedatabase.app/products/${id}.json`,{
+        method : 'PATCH',
+        headers: {
+            'Content-Type' : 'application/json'
+        },
+        body: JSON.stringify({
             title,
             description,
             imageUrl,
-        }
+        })
+    })
+        dispatch({
+            type : UPDATE_PRODUCT,
+            pid : id,
+            productData : {
+                title,
+                description,
+                imageUrl,
+            }
+        })
     }
+  
 }
 
 
