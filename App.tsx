@@ -28,6 +28,7 @@ export default function App() {
 
   useEffect(() => {
     async function loadFont() {
+      setFontLoad(false);
       await Font.loadAsync(customFonts);
       setFontLoad(true);
     }

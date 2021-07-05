@@ -20,6 +20,7 @@ import { Colors } from "react-native/Libraries/NewAppScreen";
 
 const ProductOverviewScreen = (props: any) => {
   const [isLoadintg, setIsLoading] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError]: any = useState();
   const products = useSelector(
     (state: any) => state?.products?.availableProduct
@@ -27,13 +28,13 @@ const ProductOverviewScreen = (props: any) => {
   const dispatch = useDispatch();
   const loadProducts = useCallback(async () => {
     setError(null);
-    setIsLoading(true);
+    setIsRefreshing(true);
     try {
       await dispatch(fetchProducts());
     } catch (error) {
       setError(error.message);
     }
-    setIsLoading(false);
+    setIsRefreshing(false);
   }, [dispatch, setIsLoading, setError]);
 
   useEffect(() => {
@@ -47,7 +48,11 @@ const ProductOverviewScreen = (props: any) => {
     };
   }, [loadProducts]);
   useEffect(() => {
-    loadProducts();
+    setIsLoading(true);
+
+    loadProducts().then((res) => {
+      setIsLoading(false);
+    });
   }, [dispatch, loadProducts]);
   const selectItemHandler = (id: any, title: any) => {
     props.navigation.navigate("ProductDetail", {
@@ -85,6 +90,8 @@ const ProductOverviewScreen = (props: any) => {
   }
   return (
     <FlatList
+      onRefresh={loadProducts}
+      refreshing={isRefreshing}
       data={products}
       keyExtractor={(item) => item.id}
       renderItem={(itemData) => {
