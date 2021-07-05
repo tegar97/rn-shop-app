@@ -8,10 +8,12 @@ import {
   Platform,
   Alert,
   KeyboardAvoidingView,
+  ActivityIndicator,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { createProduct, updateProduct } from "../../store/actions/Product";
 import Input from "./../../UI/Input";
+import colors from "../../constant/colors";
 const FORM_INPUT_UPDATE = "FORM_INPUT_UPDATE";
 
 const formReducer = (state: any, action: any) => {
@@ -37,6 +39,8 @@ const formReducer = (state: any, action: any) => {
   return state;
 };
 const EditProduct = (props: any) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
   const dispatch = useDispatch();
 
   const prodId = props.navigation.getParam("productId");
@@ -60,31 +64,38 @@ const EditProduct = (props: any) => {
     formIsValid: editedProduct ? true : false,
   });
 
-  const submitHandler = useCallback(() => {
+  const submitHandler = useCallback(async () => {
     // if (!FormState.formIsValid) {
     //   Alert.alert("Wrong Input!", "Please check the errors in the form", [
     //     { text: "OKAY" },
     //   ]);
     // }
-    if (editedProduct) {
-      dispatch(
-        updateProduct(
-          prodId,
-          FormState.inputValues.title,
-          FormState.inputValues.description,
-          FormState.inputValues.imageUrl
-        )
-      );
-    } else {
-      dispatch(
-        createProduct(
-          FormState.inputValues.title,
-          FormState.inputValues.description,
-          FormState.inputValues.imageUrl,
-          +FormState.inputValues.price
-        )
-      );
+    setError(null);
+    setIsLoading(true);
+    try {
+      if (editedProduct) {
+        await dispatch(
+          updateProduct(
+            prodId,
+            FormState.inputValues.title,
+            FormState.inputValues.description,
+            FormState.inputValues.imageUrl
+          )
+        );
+      } else {
+        await dispatch(
+          createProduct(
+            FormState.inputValues.title,
+            FormState.inputValues.description,
+            FormState.inputValues.imageUrl,
+            +FormState.inputValues.price
+          )
+        );
+      }
+    } catch (error) {
+      setError(error.message);
     }
+    setIsLoading(false);
     props.navigation.goBack();
   }, [dispatch, prodId, FormState]);
 
@@ -103,7 +114,13 @@ const EditProduct = (props: any) => {
   useEffect(() => {
     props.navigation.setParams({ submit: submitHandler });
   }, [submitHandler]);
-
+  if (isLoading) {
+    return (
+      <View style={styles.centered}>
+        <ActivityIndicator size="large" color={colors.primary} />;
+      </View>
+    );
+  }
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -156,6 +173,7 @@ const EditProduct = (props: any) => {
             keyboardType="default"
             returnKeyType="next"
             multiline
+            numberOfLines={3}
             onInputChange={inputChangeHandler}
             initialValue={editedProduct ? editedProduct.description : ""}
             initialValid={!!editedProduct}
@@ -188,6 +206,11 @@ EditProduct.navigationOptions = (navData: any) => {
 const styles = StyleSheet.create({
   form: {
     margin: 20,
+  },
+  centered: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   formControl: {
     width: "100%",
